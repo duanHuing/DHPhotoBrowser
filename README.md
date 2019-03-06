@@ -4,7 +4,7 @@
 
 进出图片浏览器时会有一个放大、缩小的动画。浏览器中可以通过捏合缩放图片
 
-![Q20180411-170112-H](https://upload-images.jianshu.io/upload_images/10776844-49f561816b0981c7.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/326)
+![Q20180411-170112-H](https://upload-images.jianshu.io/upload_images/10776844-49f561816b0981c7.gif)
 
 ## 实现思路：
 

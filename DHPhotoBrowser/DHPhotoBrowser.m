@@ -78,17 +78,6 @@ static CGFloat const itemSpacing = 8;
     [self.view addConstraints:arr1];
     [self.view addConstraints:arr2];
     
-    // what's happend
-    
-    /* - (void)viewDidLayoutSubviews {
-           [super viewDidLayoutSubviews];
-     
-           self.flowLayout.itemSize = self.view.frame.size;
-           [self.collectionView reloadData];
-           [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentIndex indexSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:false];
-     
-       }
-     */
 }
 
 
@@ -157,22 +146,12 @@ static CGFloat const itemSpacing = 8;
     int page = floor((self.collectionView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     self.currentIndex = page;
     
-    NSLog(@"scrollViewDidScroll_%ld_%f",(long)self.currentIndex,self.collectionView.contentOffset.x);
-    
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
 
 /**  Presented 时的弹出动画  */
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-    /**
-     - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-     
-     
-     
-         return [DHZoomTransition transitionWithType:DHZoomTransitionTypeEnlarge];
-     }
-     */
     return [DHZoomTransition transitionWithType:DHZoomTransitionTypeEnlarge];
 }
 

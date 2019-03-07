@@ -56,18 +56,14 @@
     }
     
     self.imageView.frame = [DHImageTool adaptSizeWithImage:self.imageView.image maxSize:self.bounds.size];
-    
-    _scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.frame), MAX(CGRectGetHeight(self.imageView.frame), CGRectGetHeight(self.frame)));
+    CGFloat max_width = MAX(CGRectGetWidth(self.frame), CGRectGetWidth(self.imageView.frame));
+    CGFloat max_height = MAX(CGRectGetHeight(self.imageView.frame), CGRectGetHeight(self.frame));
+    _scrollView.contentSize = CGSizeMake(max_width, max_height);
     [_scrollView scrollRectToVisible:_scrollView.bounds animated:NO];
     
-    if (CGRectGetHeight(self.imageView.frame) <= CGRectGetHeight(self.frame)) {
-        _scrollView.alwaysBounceVertical = NO;
-    } else {
-        _scrollView.alwaysBounceVertical = YES;
-    }
 }
 
-
+// 赋值
 - (void)configCellWithItem:(id)item {
     
     if ([item hasPrefix:@"http"]) {

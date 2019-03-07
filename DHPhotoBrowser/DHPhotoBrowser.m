@@ -34,7 +34,7 @@ UIViewControllerTransitioningDelegate>
 @implementation DHPhotoBrowser
 
 static NSString * const reuseIdentifier = @"Cell";
-static CGFloat const itemSpacing = 8;
+static CGFloat const itemSpacing = 10;
 
 
 + (instancetype)browserWithPhotos:(NSArray*)photos currentIndex:(NSInteger)currentIndex {
@@ -59,24 +59,9 @@ static CGFloat const itemSpacing = 8;
     self.view.backgroundColor = [UIColor blackColor];
     self.transitioningDelegate = self;
    
-    
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-    
-    
-    
-    self.collectionView.translatesAutoresizingMaskIntoConstraints = false;
-    // H：水平   ； V：垂直
-    NSArray *arr1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-s-[collectionView]-s-|"
-                                                            options:0
-                                                            metrics:@{@"s":@(-itemSpacing)}
-                                                             views:@{@"collectionView":_collectionView}];
-    
-    NSArray *arr2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|"
-                                                            options:0
-                                                            metrics:nil
-                                                              views:@{@"collectionView":_collectionView}];
-    [self.view addConstraints:arr1];
-    [self.view addConstraints:arr2];
+
+    [self dh_setupConstraints];
     
 }
 
@@ -86,8 +71,6 @@ static CGFloat const itemSpacing = 8;
     
     self.flowLayout.itemSize = self.view.frame.size;
     [self.collectionView reloadData];
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:false];
-    
 }
 
 #pragma mark - public 
@@ -107,6 +90,24 @@ static CGFloat const itemSpacing = 8;
     self.tmpImageView = imageView;
     [self dismissViewControllerAnimated:YES completion:nil];
     
+}
+
+// 设置约束  VFL
+- (void)dh_setupConstraints {
+    
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = false;
+    // H：水平   ； V：垂直
+    NSArray *arr1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-s-[collectionView]-s-|"
+                                                            options:0
+                                                            metrics:@{@"s":@(-itemSpacing)}
+                                                              views:@{@"collectionView":_collectionView}];
+    
+    NSArray *arr2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|"
+                                                            options:0
+                                                            metrics:nil
+                                                              views:@{@"collectionView":_collectionView}];
+    [self.view addConstraints:arr1];
+    [self.view addConstraints:arr2];
 }
 
 

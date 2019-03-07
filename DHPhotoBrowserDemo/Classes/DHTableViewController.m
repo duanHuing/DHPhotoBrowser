@@ -37,8 +37,6 @@
         cell = [[DHPicTableViewCell alloc] initWithStyle:(UITableViewCellStyleDefault) reuseIdentifier:@"reuseIdentifier"];
         cell.superVC = self;
     }
-    
-    
     return cell;
 }
 

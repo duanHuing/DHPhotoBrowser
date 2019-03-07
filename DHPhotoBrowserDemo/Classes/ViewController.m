@@ -47,7 +47,6 @@
 - (void)clickTap:(UITapGestureRecognizer*)tap {
     
     DHPhotoBrowser *photoBrowser = [DHPhotoBrowser browserWithPhotos:_imgNames currentIndex:tap.view.tag - 100];
-    
     photoBrowser.srcImagesContainerView = tap.view.superview;
     photoBrowser.imageViewBaseTag = 100;
     [photoBrowser showFromController:self];

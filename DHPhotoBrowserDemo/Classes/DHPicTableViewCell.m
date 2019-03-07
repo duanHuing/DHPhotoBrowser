@@ -20,10 +20,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        
-        
         _imgNames = @[@"1",@"2"];
-        
         for (int i = 0; i < _imgNames.count; i++) {
             UIImageView *imv = [[UIImageView alloc] initWithFrame:CGRectMake(50 + (80 + 10) * i, 0, 80, 80)];
             imv.image = [UIImage imageNamed:_imgNames[i]];
@@ -34,8 +31,6 @@
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTap:)];
             [imv addGestureRecognizer:tap];
         }
-        
-        
     }
     return self ;
 }

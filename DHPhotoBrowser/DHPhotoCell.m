@@ -19,9 +19,8 @@
 
 @implementation DHPhotoCell
 
--(instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        
         [self.contentView addSubview:self.scrollView];
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -34,7 +33,6 @@
     [super layoutSubviews];
 
     self.scrollView.frame = self.bounds;
-    
     [self resetImageSize];
     
 }
@@ -46,7 +44,6 @@
         self.singleClickBlock(self.imageView);
     }
 }
-
 
 #pragma mark - method
 
@@ -69,9 +66,7 @@
     if ([item hasPrefix:@"http"]) {
         __weak typeof(self) weakSelf = self;
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:item] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            
             [weakSelf resetImageSize];
-        
         }];
     }
     else {
@@ -81,16 +76,16 @@
     }
 }
 
-
 #pragma mark -- UIScrollViewDelegate
 
+// 在ScrollView上  所需要缩放的 对象
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    // 在ScrollView上  所需要缩放的 对象
     return _imageView;
 }
 
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView{
-    //捏合图片时调整图片的位置
+// 捏合图片时调整图片的位置
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    
     CGFloat offsetX = (CGRectGetWidth(scrollView.bounds) > scrollView.contentSize.width)?
     (CGRectGetWidth(scrollView.bounds) - scrollView.contentSize.width) / 2 : 0.0;
     
@@ -100,7 +95,6 @@
                                         scrollView.contentSize.height / 2 + offsetY);
 }
 
-
 #pragma mark - lazy loading
 
 -(UIScrollView *)scrollView {
@@ -109,7 +103,7 @@
         _scrollView.delegate = self;
         // 设置 scrollView的 最大 和 最小 缩放比率
         _scrollView.minimumZoomScale = 1;
-        _scrollView.maximumZoomScale = 5;
+        _scrollView.maximumZoomScale = 3;
         //没有下面一句的话，顶部会有留白
         if (@available(iOS 11.0, *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

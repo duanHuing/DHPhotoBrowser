@@ -11,6 +11,7 @@
 #import "DHPhotoCell.h"
 
 @interface DHPhotoBrowser ()<UICollectionViewDelegate,
+UICollectionViewDelegateFlowLayout,
 UICollectionViewDataSource,
 UIViewControllerTransitioningDelegate>
 
@@ -33,9 +34,8 @@ UIViewControllerTransitioningDelegate>
 
 @implementation DHPhotoBrowser
 
-static NSString * const reuseIdentifier = @"Cell";
-static CGFloat const itemSpacing = 10;
-
+static NSString * const DHPhotoBrowserCellId = @"CellID";
+static CGFloat const DHPhotoBrowserItemSpacing = 10;
 
 + (instancetype)browserWithPhotos:(NSArray*)photos currentIndex:(NSInteger)currentIndex {
     return [[self alloc] initWithPhotos:photos currentIndex:currentIndex];
@@ -50,7 +50,7 @@ static CGFloat const itemSpacing = 10;
 }
 
 - (void)dealloc {
-    NSLog(@"%@",self.class);
+    NSLog(@"dealloc -- %@",self.class);
 }
 
 - (void)viewDidLoad {
@@ -63,14 +63,6 @@ static CGFloat const itemSpacing = 10;
 
     [self dh_setupConstraints];
     
-}
-
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-    self.flowLayout.itemSize = self.view.frame.size;
-    [self.collectionView reloadData];
 }
 
 #pragma mark - public 
@@ -99,7 +91,7 @@ static CGFloat const itemSpacing = 10;
     // H：水平   ； V：垂直
     NSArray *arr1 = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-s-[collectionView]-s-|"
                                                             options:0
-                                                            metrics:@{@"s":@(-itemSpacing)}
+                                                            metrics:@{@"s":@(-DHPhotoBrowserItemSpacing)}
                                                               views:@{@"collectionView":_collectionView}];
     
     NSArray *arr2 = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|"
@@ -119,7 +111,7 @@ static CGFloat const itemSpacing = 10;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    DHPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    DHPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:DHPhotoBrowserCellId forIndexPath:indexPath];
     [cell configCellWithItem:self.photosArray[indexPath.item]];
     
     __weak __typeof(self)weakSelf = self;
@@ -133,12 +125,16 @@ static CGFloat const itemSpacing = 10;
 #pragma mark <UICollectionViewDelegate>
 
 
+#pragma mark - UICollectionViewDelegateFlowLayout
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return self.view.bounds.size;
+}
 
 #pragma mark - UIScrollViewDelegate
 
 /**  监听collectionView滚动  */
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView != _collectionView) {
         return;
     }
@@ -159,6 +155,15 @@ static CGFloat const itemSpacing = 10;
 /**  dismiss时的消失动画  */
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
     return [DHZoomTransition transitionWithType:DHZoomTransitionTypeLessen];
+}
+
+#pragma mark - super
+
+// 转屏时会被调用
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    #warning 屏幕旋转后，改变cell的size，显示图片的cell位置会有问题，待解决
+    //[self.collectionView reloadData];
+    [self.collectionView performBatchUpdates:nil completion:nil];
 }
 
 #pragma mark - getter
@@ -182,10 +187,10 @@ static CGFloat const itemSpacing = 10;
 - (UICollectionViewFlowLayout *)flowLayout {
     if (!_flowLayout) {
         _flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        _flowLayout.minimumLineSpacing = 2 * itemSpacing;
+        _flowLayout.minimumLineSpacing = 2 * DHPhotoBrowserItemSpacing;
         _flowLayout.minimumInteritemSpacing = 0;
         _flowLayout.itemSize = self.view.frame.size;
-        _flowLayout.sectionInset = UIEdgeInsetsMake(0, itemSpacing, 0, itemSpacing);
+        _flowLayout.sectionInset = UIEdgeInsetsMake(0, DHPhotoBrowserItemSpacing, 0, DHPhotoBrowserItemSpacing);
         _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     }
     return _flowLayout;
@@ -193,13 +198,12 @@ static CGFloat const itemSpacing = 10;
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(-itemSpacing, 0, CGRectGetWidth(self.view.frame) + 2 * itemSpacing, CGRectGetHeight(self.view.bounds)) collectionViewLayout:self.flowLayout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(-DHPhotoBrowserItemSpacing, 0, CGRectGetWidth(self.view.frame) + 2 * DHPhotoBrowserItemSpacing, CGRectGetHeight(self.view.bounds)) collectionViewLayout:self.flowLayout];
         _collectionView.backgroundColor = [UIColor blackColor];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.pagingEnabled = YES;
-        [_collectionView registerClass:[DHPhotoCell class] forCellWithReuseIdentifier:reuseIdentifier];
-        _collectionView.pagingEnabled = YES;
+        [_collectionView registerClass:[DHPhotoCell class] forCellWithReuseIdentifier:DHPhotoBrowserCellId];
         [self.view addSubview:_collectionView];
     }
     return _collectionView;

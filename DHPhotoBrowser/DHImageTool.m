@@ -13,13 +13,10 @@
 + (CGRect)adaptSizeWithImage:(UIImage*)image maxSize:(CGSize)maxSize {
     
     CGSize imageSize = image.size;
-    
     CGRect newRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
     
-    
     if (maxSize.width < maxSize.height) {
-        
-        // 图片宽度 = 屏幕宽度
+        // 竖屏时，图片宽度 = 屏幕宽度
         newRect.size.width = maxSize.width;
         newRect.size.height = maxSize.width / imageSize.width * imageSize.height ;
         
@@ -27,10 +24,9 @@
             newRect.origin.y = (maxSize.height - newRect.size.height) / 2 ;
         }
         return newRect ;
-        
-        
     }
     
+    // 横屏时 图片高度 = 屏幕高度
     newRect.size.height = maxSize.height;
     newRect.size.width = maxSize.height / imageSize.height * imageSize.width ;
     
